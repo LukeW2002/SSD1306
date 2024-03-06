@@ -10,7 +10,7 @@
 #define _clear(x) ( ~(1 << x))
 
 //ADAFRUIT SSD1306 DATASHEET
-#define DEFAULT_ADDRESS 0x3C //p.20 8.1.5.2
+#define DEFAULT_ADDRESS 0x78 //p.20 8.1.5.2
 #define DEFAULTBUFFER 1024
 #define COMMAND 0x00
 #define DATA 0x400
@@ -94,5 +94,3 @@ void init(uint32_t i2c, uint8_t address, uint8_t width, uint8_t height);
 void ssd1306_drawVPattern(uint8_t x, int8_t y, uint8_t pattern); 
 void ssd1306_drawWCharStr(uint8_t x, int8_t y, color color, WrapType wrType, wchar_t *str);
 
-
-void usartSendString(const char *str);

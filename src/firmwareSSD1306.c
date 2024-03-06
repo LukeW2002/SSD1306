@@ -4,6 +4,7 @@
 
 #include "pentacom_font.h"
 #include "firmwareSSD1306.h"
+#include "firmwareSSD1306.h"
 
 #include <stdlib.h>
 
@@ -17,16 +18,7 @@ uint16_t screenBuffer = DEFAULTBUFFER;
 #define I2C_SCL GPIO8
 #define I2C_SDA GPIO9
 
-void usartSendString(const char *str)
-{
-    while (*str)
-    {
-        usart_send_blocking(USART2, *str);
-        str++;
-    }
-	usart_send_blocking(USART2, '\n');
-	usart_send_blocking(USART2, '\r');
-}
+
 
 //RANDOM NOISE STOLEN FROM THE RUSSIAN DUDE
 uint8_t screenRAM[DEFAULTBUFFER] = {
@@ -127,12 +119,10 @@ void sendAddress(uint8_t spec)
 
 void sendData(uint8_t spec, uint8_t data)
 {
-    usartSendString("Data sending Started");
     start();
     sendAddress(spec);
     sendAddress(data);
     stop();
-    usartSendString("Success Data sent");
 }
 
     /* REGISTER COMMANDS */
@@ -141,12 +131,10 @@ void displayOnOff (bool displaySwitch)
     if (displaySwitch)
     {
         sendData(COMMAND, DISPLAY_ON_RAM);
-        usartSendString("Screen Turned on");
     }
     else
     {
         sendData(COMMAND, DISPLAY_NO_RAM);
-        usartSendString("Screen Turned off"); 
     }
 }
 
@@ -203,16 +191,13 @@ void setCompPinsConfig(uint8_t value)
 
 void ledOnOff(bool ledSwitch)
 {
-    usartSendString("Initialising ledSwitch");
     if (ledSwitch == true)
     {
         sendData(COMMAND, SET_DISPLAY_ON);
-        usartSendString("Led On");
     }
     else 
     {
         sendData(COMMAND, SET_DISPLAY_OFF);
-        usartSendString("Led off");
 
     }
 }
@@ -276,40 +261,28 @@ void init(uint32_t i2c, uint8_t address, uint8_t width, uint8_t height)
 
     //STOLEN FROM ADAFRUIT LIBRARY
     ledOnOff(false);
-    usartSendString("Step 1, Success!");
 
     displayOnOff(false);
-    usartSendString("Step 2, Success!");
 
     setOscillatorFrequency(0x80);
-    usartSendString("Step 3, Success!");
 
     setMultiplexRatio(HEIGHT - 1);
-    usartSendString("Step 4, Success!");
 
     setInverse(false);
-    usartSendString("Step 5, Success!");
     
     chargePump(true);
-    usartSendString("Step 5, Success!");
 
     setPrecharger(0x22);
-    usartSendString("Step 6, Success!");
 
     setCompPinsConfig(0x02);
-    usartSendString("Step 7, Success!");
 
     setVcomLevel(0x20);
-    usartSendString("Step 8, Success!");
 
     displayOnOff(true);
-    usartSendString("Step 9, Success!");
 
     ledOnOff(true);
-    usartSendString("Step 9, Success!");
 
     refresh();
-    usartSendString("Step 10, Success!");
 }
 
 
